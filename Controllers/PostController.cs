@@ -21,11 +21,11 @@ namespace APIBlog.Controllers
 
         [Authorize]
         [HttpPost("cadastrar")]
-        public async Task<ActionResult> CadastrarPostagem(Postagem post)
+        public ActionResult CadastrarPostagem(Postagem post)
         {
             if (!ModelState.IsValid)
             {
-                return  BadRequest(ModelState.Values.SelectMany(v => v.Errors));
+                return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
             }
 
             try
@@ -33,7 +33,7 @@ namespace APIBlog.Controllers
                 _context.Postagens.Add(post);
                 _context.SaveChanges();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.InnerException.ToString());
             }
@@ -42,12 +42,13 @@ namespace APIBlog.Controllers
         }
 
         [HttpGet("listar-postagens")]
-        public async Task<ActionResult> ListarPostagens()
+        public ActionResult ListarPostagens()
         {
             try
             {
                 return Ok(_context.Postagens.ToList());
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 return BadRequest(e.InnerException.ToString());
             }

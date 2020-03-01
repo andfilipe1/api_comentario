@@ -37,7 +37,7 @@ namespace APIBlog.Controllers
 
         [Authorize]
         [HttpPost("incluir")]
-        public async Task<ActionResult> IncluirFotos(FotoViewModel foto)
+        public ActionResult IncluirFotos(FotoViewModel foto)
         {
             if (!ModelState.IsValid)
             {
@@ -60,7 +60,7 @@ namespace APIBlog.Controllers
 
             return Ok();
 
-            
+
         }
     }
 }

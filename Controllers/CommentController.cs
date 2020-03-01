@@ -22,7 +22,7 @@ namespace APIBlog.Controllers
 
         [Authorize]
         [HttpPost("cadastrar")]
-        public async Task<ActionResult> ComentarPost(ComentarioViewModel comentario)
+        public ActionResult ComentarPost(ComentarioViewModel comentario)
         {
             if (!ModelState.IsValid)
             {
@@ -44,7 +44,7 @@ namespace APIBlog.Controllers
         }
 
         [HttpGet("listar-comentarios")]
-        public async Task<ActionResult> ListarComentarios()
+        public ActionResult ListarComentarios()
         {
             try
             {

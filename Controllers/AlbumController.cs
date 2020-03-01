@@ -21,7 +21,7 @@ namespace APIBlog.Controllers
 
         [Authorize]
         [HttpPost("cadastrar")]
-        public async Task<ActionResult> CriarAlbum(Album album)
+        public ActionResult CriarAlbum(Album album)
         {
             if (!ModelState.IsValid)
             {
@@ -42,7 +42,7 @@ namespace APIBlog.Controllers
         }
 
         [HttpGet("listar-albuns")]
-        public async Task<ActionResult> ListarAlbuns()
+        public ActionResult ListarAlbuns()
         {
             try
             {
