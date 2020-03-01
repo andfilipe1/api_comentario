@@ -1,26 +1,52 @@
 version: '3.4'
 
-services:
-  api-postgrees:
-    image: postgres:latest
-    restart: always
-    ports:
-      - "5432:5432"
-    networks:
-      - api-network
+networks:
+  dockerapi-dev:
+    driver: bridge 
 
-  api_comentario:
-    image: andfilipe1/api_comentario
+services:
+  dockerapi:
+    image: dockerapiblog:latest
+    depends_on:
+      - "postgres_image"
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:80"
+      - "8000:80"     
+    environment:
+      DB_CONNECTION_STRING: "host=postgres_image;port=5432;database=blogdb;username=bloguser;password=bloguser"
     networks:
-      - api-network
-    depends_on:
-      - api-postgrees
+      - dockerapi-dev  
+  
+  postgres_image:
+    image: postgres:latest
+    ports:
+      - "5432"
+    restart: always
+    volumes:
+      - db_volume:/var/lib/postgresql/data
+      - ./dbscripts/seed.sql :/docker-entrypoint-initdb.d/seed.sql
+    environment:
+      POSTGRES_USER: "bloguser"
+      POSTGRES_PASSWORD: "bloguser"
+      POSTGRES_DB: "blogdb"
+    networks:
+      - dockerapi-dev
+volumes:
+  db_volume:
 
-networks: 
-    api-network:
-        driver: overlay
+  teste-pgadmin-compose:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "luiz.brandao@live.com.br"
+      PGADMIN_DEFAULT_PASSWORD: "PgAdmin2019!"
+    ports:
+      - "16543:80"
+    depends_on:
+      - postgres_image
+    networks:
+      - dockerapi-dev
+         
+    
+     

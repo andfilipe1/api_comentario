@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using APIBlog.AcessoPostgre;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -22,14 +23,36 @@ namespace APIBlog
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+       
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddEntityFrameworkNpgsql().AddDbContext<APIBlogContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("Development")));
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info { Title = "API Blog", Version = "v1" });
+            
+             // This method gets called by the runtime. Use this method to add services to the container.
+            var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+            services.AddDbContext<APIBlogContext>(options =>
+                options.UseNpgsql(
+                    connectionString
+                )
+            );
+
+            //services.AddEntityFrameworkNpgsql().AddDbContext<APIBlogContext>(opt => 
+            //opt.UseNpgsql(Configuration.GetConnectionString("DB_CONNECTION_STRING")));
+            
+            services.AddSwaggerGen(c => {
+                c.SwaggerDoc("v1",
+                    new Info
+                    {
+                        Title = "Api Blog",
+                        Version = "v1",
+                        Description = "API informações Comentarios",
+                        Contact = new Contact
+                        {
+                            Name = "Luiz Filipe",
+                            Url = "https://github.com/andfilipe1",
+                            Email = "luiz.brandao@live.com.br"
+                        }
+                    });
             });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -63,8 +86,12 @@ namespace APIBlog
             {
                 app.UseHsts();
             }
+            // Ativando middlewares para uso do Swagger
             app.UseSwagger();
-            app.UseHttpsRedirection();
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Agenda API V1");
+            });
+            //app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();
         }
