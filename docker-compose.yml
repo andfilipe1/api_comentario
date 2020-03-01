@@ -24,22 +24,17 @@ services:
     ports:
       - "5432"
     restart: always
-    volumes:
-      - db_volume:/var/lib/postgresql/data
-      - ./dbscripts/seed.sql :/docker-entrypoint-initdb.d/seed.sql
     environment:
       POSTGRES_USER: "bloguser"
       POSTGRES_PASSWORD: "bloguser"
       POSTGRES_DB: "blogdb"
     networks:
       - dockerapi-dev
-volumes:
-  db_volume:
 
   teste-pgadmin-compose:
     image: dpage/pgadmin4
     environment:
-      PGADMIN_DEFAULT_EMAIL: "luiz.brandao@live.com.br"
+      PGADMIN_DEFAULT_EMAIL: "luiz.brandao@live.com"
       PGADMIN_DEFAULT_PASSWORD: "PgAdmin2019!"
     ports:
       - "16543:80"
