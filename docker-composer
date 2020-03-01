@@ -1,25 +1,26 @@
 version: '3.4'
 
 services:
-  api_blog-postgres:
-    image: mongo
+  api-postgrees:
+    image: postgres:latest
     restart: always
     ports:
-      - "27017:27017"
+      - "5432:5432"
     networks:
-      - starwars-network
+      - api-network
 
-  b2wstarwarsapi:
-    image: robertocamara/b2wstarwarsapi
+  api_comentario:
+    image: andfilipe1/api_comentario
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8080:80"
     networks:
-      - starwars-network
+      - api-network
     depends_on:
-      - redisstarwars
-      - starwars-mongo
-
+      - api-postgrees
 
 networks: 
-    starwars-network:
+    api-network:
         driver: overlay
